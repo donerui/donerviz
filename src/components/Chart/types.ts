@@ -25,4 +25,6 @@ export interface IChartProps {
   children: React.ReactNode
   className?: string
   padding?: number
+  pan?: boolean
+  zoom?: boolean
 }

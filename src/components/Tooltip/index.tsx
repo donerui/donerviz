@@ -6,7 +6,7 @@ import { useChart, type ITooltipProps } from '..'
 
 export * from './types'
 
-function Tooltip({
+function Tooltip ({
   className
 }: ITooltipProps): JSX.Element {
   const { mouseCoordinates, tooltipData, setTooltipData } = useChart()
@@ -72,7 +72,7 @@ function Tooltip({
           </div>
         </Transition>
       </div>
-    )
+      )
 }
 
 export default Tooltip

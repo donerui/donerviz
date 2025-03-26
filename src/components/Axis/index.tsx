@@ -9,9 +9,9 @@ export * from './utils'
 
 function Axis ({
   className,
-  id = '',
-  dimension = '',
-  dataKey = '',
+  id,
+  dimension,
+  dataKey,
   dataType = 'string',
   strokeOptions = defaultLineStrokeOptions,
   tickLabelOptions,
@@ -36,10 +36,10 @@ function Axis ({
   useEffect(() => {
     switch (dimension) {
       case 'x':
-        setLabelDirection(tickLabelOptions?.dominantBaseline === 'hanging' ? 'top' : 'down')
+        setLabelDirection(tickLabelOptions?.dominantBaseline !== 'hanging' ? 'top' : 'down')
         break
       case 'y':
-        setLabelDirection(tickLabelOptions?.textAnchor === 'end' ? 'right' : 'left')
+        setLabelDirection(tickLabelOptions?.textAnchor === 'start' ? 'left' : 'right')
         break
       default:
         break
@@ -103,6 +103,7 @@ function Axis ({
                 <Svg.Text
                   point={{ x: segX.value, y: axisY + (labelDirection === 'top' ? -2 : 2) }}
                   text={segX.label}
+                  dominantBaseline='hanging'
                   {...tickLabelOptions}
                 />
               </Fragment>
@@ -111,13 +112,14 @@ function Axis ({
             {(snappedData?.x != null && snappedData?.data?.x != null) && (
               <Fragment>
                 <Svg.Line
-                  points={[{ x: snappedData.x, y: axisY }, { x: snappedData?.x, y: axisY + (labelDirection === 'top' ? -1 : 1) }]}
+                  points={[{ x: snappedData.x, y: axisY }, { x: snappedData?.x, y: axisY + (labelDirection === 'down' ? -1 : 1) }]}
                   strokeOptions={strokeOptions}
                 />
                 <Svg.Text
-                  point={{ x: snappedData.x, y: axisY + (labelDirection === 'top' ? -4 : 4) }}
+                  point={{ x: snappedData.x, y: axisY + (labelDirection === 'down' ? -2 : 2) }}
                   text={snappedData?.data.x}
                   {...tickLabelOptions}
+                  dominantBaseline={tickLabelOptions?.dominantBaseline === 'hanging' ? 'hanging' : 'middle'}
                 />
               </Fragment>
             )}
@@ -146,6 +148,7 @@ function Axis ({
                 <Svg.Text
                   point={{ x: axisX + (labelDirection === 'right' ? -2 : 2), y: segY.value }}
                   text={segY.label}
+                  textAnchor='end'
                   {...tickLabelOptions}
                 />
               </Fragment>
@@ -154,13 +157,14 @@ function Axis ({
             {(snappedData?.y != null && snappedData?.data?.y != null) && (
               <Fragment>
                 <Svg.Line
-                  points={[{ x: axisX, y: snappedData.y }, { x: axisX + (labelDirection === 'right' ? -1 : 1), y: snappedData?.y }]}
+                  points={[{ x: axisX, y: snappedData.y }, { x: axisX + (labelDirection === 'left' ? -1 : 1), y: snappedData?.y }]}
                   strokeOptions={strokeOptions}
                 />
                 <Svg.Text
-                  point={{ x: axisX + (labelDirection === 'right' ? -1 : 1), y: snappedData.y }}
+                  point={{ x: axisX + (labelDirection === 'left' ? -2 : 2), y: snappedData.y }}
                   text={snappedData?.data.y}
                   {...tickLabelOptions}
+                  textAnchor={tickLabelOptions?.textAnchor === 'start' ? 'end' : 'start'}
                 />
               </Fragment>
             )}

@@ -13,7 +13,9 @@ const nonSvgTypes = [Legend, ChartTooltip]
 function LineChart ({
   className,
   children,
-  padding = 8
+  padding = 8,
+  pan,
+  zoom
 }: ILineChartProps): JSX.Element {
   const childrenArray = useMemo(() => React.Children.toArray(children), [children])
 
@@ -57,8 +59,8 @@ function LineChart ({
               'w-full h-full duration-1000'
             )}
             viewBoxPadding={padding}
-            pan
-            zoom
+            pan={pan}
+            zoom={zoom}
             flipY
           >
             {!hasXAxis && (<Axis dimension='x' id='x-axis' hidden />)}
