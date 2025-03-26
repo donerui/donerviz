@@ -12,7 +12,9 @@ const nonSvgTypes = [Legend, ChartTooltip]
 function ScatterChart ({
   className,
   children,
-  padding = 8
+  padding = 8,
+  pan,
+  zoom
 }: IScatterChartProps): JSX.Element {
   const childrenArray = useMemo(() => React.Children.toArray(children), [children])
 
@@ -40,7 +42,7 @@ function ScatterChart ({
       <ScatterChartContext.Provider value={scatterChartContextValue}>
         <div
           className={twMerge(
-            'flex flex-col justify-center items-center gap-2 w-full h-full',
+            'relative flex flex-col justify-center items-center gap-2 w-full h-full',
             className
           )}
         >
@@ -49,8 +51,8 @@ function ScatterChart ({
               'w-full h-full duration-1000'
             )}
             viewBoxPadding={padding}
-            pan
-            zoom
+            pan={pan}
+            zoom={zoom}
             flipY
           >
             {!hasXAxis && (<Axis dimension='x' id='x-axis' hidden />)}

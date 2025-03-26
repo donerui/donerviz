@@ -50,7 +50,7 @@ function LineChart ({
       <LineChartContext.Provider value={lineChartContextValue}>
         <div
           className={twMerge(
-            'flex flex-col justify-center items-center gap-2 w-full h-full',
+            'relative flex flex-col justify-center items-center gap-2 w-full h-full',
             className
           )}
         >

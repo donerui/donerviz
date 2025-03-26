@@ -38,11 +38,10 @@ function Tooltip ({
     : (
       <div
         className={twMerge(
-          'flex gap-4 duration-150 pointer-events-none',
+          'absolute flex gap-4 duration-150 pointer-events-none',
           className
         )}
         style={{
-          position: 'fixed',
           top: y + 20,
           left: x + 20
         }}
