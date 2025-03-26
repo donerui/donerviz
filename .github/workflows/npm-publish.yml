@@ -1,0 +1,52 @@
+name: Publish to NPM
+
+on:
+  push:
+    branches:
+      - main  # Adjust branch name as necessary
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+          registry-url: 'https://registry.npmjs.org'
+          scope: '@donerui'
+
+      - name: Cache Node.js modules
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Check if version has changed
+        id: version-check
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          NPM_VERSION=$(npm show @donerui/donerviz version 2>/dev/null || echo "0.0.0")
+          if [ "$VERSION" != "$NPM_VERSION" ]; then
+            echo "VERSION_CHANGED=true" >> $GITHUB_ENV
+          else
+            echo "VERSION_CHANGED=false" >> $GITHUB_ENV
+          fi
+
+      - name: Build if version has changed
+        if: env.VERSION_CHANGED == 'true'
+        run: npm run build
+
+      - name: Publish to npm if version has changed
+        if: env.VERSION_CHANGED == 'true'
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
