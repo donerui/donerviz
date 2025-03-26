@@ -1,0 +1,60 @@
+{
+  "name": "@donerui/donerviz",
+  "version": "0.0.1",
+  "description": "A modern UI library for React, styled with Tailwind CSS.",
+  "main": "dist/index.js",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "pack": "npm run build && npm pack",
+    "lint": "eslint . --ext .ts,.tsx"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/donerui/donerviz.git"
+  },
+  "keywords": [
+    "react",
+    "tailwindcss",
+    "ui library",
+    "components"
+  ],
+  "author": "Döner UI Team",
+  "license": "MIT",
+  "peerDependencies": {
+    "@donerui/base": "^0.0.1",
+    "@donerui/donerui": "^0.3.2",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "tailwindcss": "^3.4.0 || ^4.0.0"
+  },
+  "dependencies": {
+    "@headlessui/react": "^2.2.0",
+    "d3": "^7.8.5",
+    "lodash": "^4.17.21",
+    "tailwind-merge": "^2.0.0"
+  },
+  "optionalDependencies": {
+    "@donerui/base": "file:../base",
+    "@donerui/donerui": "file:../donerui"
+  },
+  "devDependencies": {
+    "@types/d3": "^7.4.3",
+    "@types/lodash": "^4.14.202",
+    "@types/react": "^18.2.37",
+    "@typescript-eslint/eslint-plugin": "^6.13.1",
+    "@typescript-eslint/parser": "^6.13.1",
+    "eslint": "^8.54.0",
+    "eslint-config-standard-with-typescript": "^40.0.0",
+    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-n": "^16.3.1",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "typescript": "^5.3.2"
+  }
+}
