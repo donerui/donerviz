@@ -3,7 +3,14 @@ import { type DataType, type MinMax, type ValueLabel } from '..'
 
 export type AxisDimension = 'x' | 'y' | 'color' | 'size' | string
 
-export interface IAxisData {
+export interface IAxisMinMax {
+  minTick?: number
+  maxTick?: number
+  minTickScaled?: number
+  maxTickScaled?: number
+}
+
+export interface IAxisData extends IAxisMinMax {
   id: string
   dimension: AxisDimension
   dataKey?: string
@@ -35,4 +42,6 @@ export interface IAxisProps {
   tickLimits?: MinMax<number>
   tickLabelOptions?: ISvgTextProps
   hidden?: boolean
+  axisX?: number | string
+  axisY?: number | string
 }

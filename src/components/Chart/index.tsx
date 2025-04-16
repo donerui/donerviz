@@ -1,6 +1,6 @@
 import { defaultViewBox, type IRectangle, type ISvgMouseCoordinates } from '@donerui/donerui'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { ChartContext, type AxesData, type IAxisData, type IChartContext, type IChartProps, type ILegendContextValue, type LegendContextValueMap, type SnappedData, type TooltipData } from '..'
+import { calculateAxisMinMaxTicks, ChartContext, type AxesData, type IAxisData, type IChartContext, type IChartProps, type ILegendContextValue, type LegendContextValueMap, type SnappedData, type TooltipData } from '..'
 
 export * from './constants'
 export * from './contexts'
@@ -25,6 +25,13 @@ function Chart ({
   const [viewBox, setViewBox] = useState<IRectangle>(defaultViewBox)
 
   const setAxis = useCallback((axis: IAxisData): void => {
+    const minMax = calculateAxisMinMaxTicks(axis)
+
+    axis.minTick = minMax.minTick
+    axis.maxTick = minMax.maxTick
+    axis.minTickScaled = minMax.minTickScaled
+    axis.maxTickScaled = minMax.maxTickScaled
+
     setAxes(prev => ({
       ...prev,
       [axis.dimension]: {

@@ -1,6 +1,7 @@
+import { multiplyWithPercentage } from '@donerui/base'
 import { Svg, defaultLineStrokeOptions, useSVG, type Alignment } from '@donerui/donerui'
 import { Fragment, useEffect, useState } from 'react'
-import { defaultTickLimits, segmentateAxis, useAxis, useChart, type IAxisProps, type ValueLabel } from '..'
+import { calculateChartMinMaxTicksForDimension, defaultTickLimits, segmentateAxis, useAxis, useChart, type IAxisProps, type ValueLabel } from '..'
 
 export * from './constants'
 export * from './hooks'
@@ -17,16 +18,20 @@ function Axis ({
   tickLabelOptions,
   tickCount = 10,
   tickLimits = defaultTickLimits,
-  hidden = false
+  hidden = false,
+  axisX = 0,
+  axisY = 0
 }: IAxisProps): JSX.Element {
-  const axisX = 0
-  const axisY = 0
-
   const renderable = dimension === 'x' || dimension === 'y'
   const { viewBox } = useSVG() // Renderable axes only
 
-  const { setAxis, snappedData } = useChart()
+  const { setAxis, snappedData, axes } = useChart()
   const axis = useAxis(dimension, id)
+
+  const minMaxForDimension = calculateChartMinMaxTicksForDimension(axes)
+
+  const axisXAsNumber = typeof axisX === 'string' ? multiplyWithPercentage(minMaxForDimension.x?.maxTickScaled ?? 0, axisX) : axisX
+  const axisYAsNumber = typeof axisY === 'string' ? multiplyWithPercentage(minMaxForDimension.y?.maxTickScaled ?? 0, axisY) : axisY
 
   const [segments, setSegments] = useState<ValueLabel[]>([])
   const [segmentLimits, setSegmentLimits] = useState<{ min: number, max: number }>({ min: 0, max: 100 })
@@ -86,7 +91,7 @@ function Axis ({
             className={className}
           >
             <Svg.Line
-              points={[{ x: Math.max(viewBox.x, segmentLimits.min), y: axisY }, { x: Math.min(viewBox.x + viewBox.width, segmentLimits.max), y: axisY }]}
+              points={[{ x: Math.max(viewBox.x, segmentLimits.min), y: axisYAsNumber }, { x: Math.min(viewBox.x + viewBox.width, segmentLimits.max), y: axisYAsNumber }]}
               strokeOptions={strokeOptions}
             />
 
@@ -96,12 +101,12 @@ function Axis ({
               >
                 <Svg.Line
                   key={i}
-                  points={[{ x: segX.value, y: axisY }, { x: segX.value, y: axisY + (labelDirection === 'top' ? -1 : 1) }]}
+                  points={[{ x: segX.value, y: axisYAsNumber }, { x: segX.value, y: axisYAsNumber + (labelDirection === 'top' ? -1 : 1) }]}
                   strokeOptions={strokeOptions}
                 />
 
                 <Svg.Text
-                  point={{ x: segX.value, y: axisY + (labelDirection === 'top' ? -2 : 2) }}
+                  point={{ x: segX.value, y: axisYAsNumber + (labelDirection === 'top' ? -2 : 2) }}
                   text={segX.label}
                   dominantBaseline='hanging'
                   {...tickLabelOptions}
@@ -112,11 +117,11 @@ function Axis ({
             {(snappedData?.x != null && snappedData?.data?.x != null) && (
               <Fragment>
                 <Svg.Line
-                  points={[{ x: snappedData.x, y: axisY }, { x: snappedData?.x, y: axisY + (labelDirection === 'down' ? -1 : 1) }]}
+                  points={[{ x: snappedData.x, y: axisYAsNumber }, { x: snappedData?.x, y: axisYAsNumber + (labelDirection === 'down' ? -1 : 1) }]}
                   strokeOptions={strokeOptions}
                 />
                 <Svg.Text
-                  point={{ x: snappedData.x, y: axisY + (labelDirection === 'down' ? -2 : 2) }}
+                  point={{ x: snappedData.x, y: axisYAsNumber + (labelDirection === 'down' ? -2 : 2) }}
                   text={snappedData?.data.x}
                   {...tickLabelOptions}
                   dominantBaseline={tickLabelOptions?.dominantBaseline === 'hanging' ? 'hanging' : 'middle'}
@@ -131,7 +136,7 @@ function Axis ({
             className={className}
           >
             <Svg.Line
-              points={[{ x: axisX, y: Math.max(viewBox.y, segmentLimits.min) }, { x: axisX, y: Math.min(viewBox.y + viewBox.height, segmentLimits.max) }]}
+              points={[{ x: axisXAsNumber, y: Math.max(viewBox.y, segmentLimits.min) }, { x: axisXAsNumber, y: Math.min(viewBox.y + viewBox.height, segmentLimits.max) }]}
               strokeOptions={strokeOptions}
             />
 
@@ -141,12 +146,12 @@ function Axis ({
               >
                 <Svg.Line
                   key={i}
-                  points={[{ x: axisX, y: segY.value }, { x: axisX + (labelDirection === 'right' ? -1 : 1), y: segY.value }]}
+                  points={[{ x: axisXAsNumber, y: segY.value }, { x: axisXAsNumber + (labelDirection === 'right' ? -1 : 1), y: segY.value }]}
                   strokeOptions={strokeOptions}
                 />
 
                 <Svg.Text
-                  point={{ x: axisX + (labelDirection === 'right' ? -2 : 2), y: segY.value }}
+                  point={{ x: axisXAsNumber + (labelDirection === 'right' ? -2 : 2), y: segY.value }}
                   text={segY.label}
                   textAnchor='end'
                   {...tickLabelOptions}
@@ -157,11 +162,11 @@ function Axis ({
             {(snappedData?.y != null && snappedData?.data?.y != null) && (
               <Fragment>
                 <Svg.Line
-                  points={[{ x: axisX, y: snappedData.y }, { x: axisX + (labelDirection === 'left' ? -1 : 1), y: snappedData?.y }]}
+                  points={[{ x: axisXAsNumber, y: snappedData.y }, { x: axisXAsNumber + (labelDirection === 'left' ? -1 : 1), y: snappedData?.y }]}
                   strokeOptions={strokeOptions}
                 />
                 <Svg.Text
-                  point={{ x: axisX + (labelDirection === 'left' ? -2 : 2), y: snappedData.y }}
+                  point={{ x: axisXAsNumber + (labelDirection === 'left' ? -2 : 2), y: snappedData.y }}
                   text={snappedData?.data.y}
                   {...tickLabelOptions}
                   textAnchor={tickLabelOptions?.textAnchor === 'start' ? 'end' : 'start'}

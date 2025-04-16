@@ -1,6 +1,6 @@
 import { clamp } from '@donerui/base'
 import { maxBy, minBy, uniqBy } from 'lodash'
-import { type DataType, type IChartPoint, type MinMax, type ValueLabel } from '..'
+import { type AxesData, type AxisDimension, type DataType, type IAxisData, type IAxisMinMax, type IChartPoint, type MinMax, type ValueLabel } from '..'
 
 export function segmentateAxis (
   scale: number,
@@ -86,4 +86,36 @@ export function calculateAxisScale<T> (
   }
 
   return [selectedPoints.map((p) => p[dataKey]), scale]
+}
+
+export function calculateAxisMinMaxTicks (axis: IAxisData): {
+  minTick: number
+  maxTick: number
+  minTickScaled: number
+  maxTickScaled: number
+} {
+  const minTick = minBy(axis.ticks, 'value')?.value ?? 0
+  const maxTick = maxBy(axis.ticks, 'value')?.value ?? 0
+
+  return {
+    minTick,
+    maxTick,
+    minTickScaled: minTick * (axis.scale ?? 1),
+    maxTickScaled: maxTick * (axis.scale ?? 1)
+  }
+}
+
+export function calculateChartMinMaxTicksForDimension (axes: AxesData): Record<AxisDimension, IAxisMinMax | undefined> {
+  return Object.entries(axes).reduce<Record<AxisDimension, IAxisMinMax | undefined>>((acc, [dimension, axesValues]) => {
+    acc[dimension] = Object.values(axesValues).reduce((acc, axis) => {
+      return {
+        minTick: axis.minTick ? Math.min(acc.minTick, axis.minTick) : acc.minTick,
+        maxTick: axis.maxTick ? Math.max(acc.maxTick, axis.maxTick) : acc.maxTick,
+        minTickScaled: axis.minTickScaled ? Math.min(acc.minTickScaled, axis.minTickScaled) : acc.minTickScaled,
+        maxTickScaled: axis.maxTickScaled ? Math.max(acc.maxTickScaled, axis.maxTickScaled) : acc.maxTickScaled
+      }
+    }, { minTick: 0, maxTick: 0, minTickScaled: 0, maxTickScaled: 0 })
+
+    return acc
+  }, {})
 }
