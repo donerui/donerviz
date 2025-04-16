@@ -121,8 +121,9 @@ function Axis ({
                   strokeOptions={strokeOptions}
                 />
                 <Svg.Text
-                  point={{ x: snappedData.x, y: axisYAsNumber + (labelDirection === 'down' ? -2 : 2) }}
+                  point={{ x: snappedData.x + 2, y: axisYAsNumber + (labelDirection === 'down' ? -2 : 2) }}
                   text={snappedData?.data.x}
+                  color={tickLabelOptions?.color ?? '#555'}
                   {...tickLabelOptions}
                   dominantBaseline={tickLabelOptions?.dominantBaseline === 'hanging' ? 'hanging' : 'middle'}
                 />
@@ -166,8 +167,9 @@ function Axis ({
                   strokeOptions={strokeOptions}
                 />
                 <Svg.Text
-                  point={{ x: axisXAsNumber + (labelDirection === 'left' ? -2 : 2), y: snappedData.y }}
+                  point={{ x: axisXAsNumber + (labelDirection === 'left' ? -2 : 2), y: snappedData.y + 2 }}
                   text={snappedData?.data.y}
+                  color={tickLabelOptions?.color ?? '#555'}
                   {...tickLabelOptions}
                   textAnchor={tickLabelOptions?.textAnchor === 'start' ? 'end' : 'start'}
                 />
@@ -177,53 +179,6 @@ function Axis ({
         )}
       </Fragment>
       )
-
-  // return hidden
-  //   ? (
-  //     <Fragment />
-  //     )
-  //   : (
-  //     <Svg.Group
-  //       className={className}
-  //     >
-  //       <Svg.Line
-  //         points={[{ x: Math.max(x, tickLimits.min), y: axisY }, { x: Math.min(x + width, tickLimits.max), y: axisY }]}
-  //         strokeOptions={strokeOptions}
-  //       />
-
-  //       {segments.map((segX, i) => (
-  //         <Fragment
-  //           key={i}
-  //         >
-  //           <Svg.Line
-  //             key={i}
-  //             points={[{ x: segX.value, y: axisY }, { x: segX.value, y: axisY + (labelDirection === 'top' ? -1 : 1) }]}
-  //             strokeOptions={strokeOptions}
-  //           />
-
-  //           <Svg.Text
-  //             point={{ x: segX.value, y: axisY + (labelDirection === 'top' ? -2 : 2) }}
-  //             text={segX.label}
-  //             {...tickLabelOptions}
-  //           />
-  //         </Fragment>
-  //       ))}
-
-  //       {highlightedX != null && (
-  //         <Fragment>
-  //           <Svg.Line
-  //             points={[{ x: highlightedX.value, y: axisY }, { x: highlightedX.value, y: axisY + (labelDirection === 'top' ? -1 : 1) }]}
-  //             strokeOptions={strokeOptions}
-  //           />
-  //           <Svg.Text
-  //             point={{ x: highlightedX.value, y: axisY + (labelDirection === 'top' ? -4 : 4) }}
-  //             text={highlightedX.label}
-  //             {...tickLabelOptions}
-  //           />
-  //         </Fragment>
-  //       )}
-  //     </Svg.Group>
-  //     )
 }
 
 export default Axis

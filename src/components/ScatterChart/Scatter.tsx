@@ -50,8 +50,6 @@ function Scatter ({
         const size = dataSelector(d, sizeAxis?.dataKey)
         const color = dataSelector(d, colorAxis?.dataKey)
 
-        console.log(x, y, size, color)
-
         const pt: IChartPoint = {
           x: {
             value: xAxis.dataType === 'number' ? x : i * 10,
